@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+      data-menu-styles="dark" data-toggled="close">
+
+<head>
+
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> WEALTHI - Manage Brokers </title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/brand-logos/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Choices JS -->
+    <script src="{{ url_for('static', filename='libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+
+    <!-- Main Theme Js -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Bootstrap Css -->
+    <link id="style" href="{{ url_for('static', filename='libs/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Style Css -->
+    <link href="{{ url_for('static', filename='css/styles.min.css') }}" rel="stylesheet">
+
+    <!-- Icons Css -->
+    <link href="{{ url_for('static', filename='css/icons.css') }}" rel="stylesheet">
+
+    <!-- Node Waves Css -->
+    <link href="{{ url_for('static', filename='libs/node-waves/waves.min.css') }}" rel="stylesheet">
+
+    <!-- Simplebar Css -->
+    <link href="{{ url_for('static', filename='libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
+
+    <!-- Color Picker Css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/@simonwep/pickr/themes/nano.min.css') }}">
+
+    <!-- Choices Css -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='libs/choices.js/public/assets/styles/choices.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/jsvectormap/css/jsvectormap.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/swiper/swiper-bundle.min.css') }}">
+
+
+</head>
+
+<body>
+
+<div class="page">
+    <!-- app-header -->
+    {% include 'commons/header.html' %}
+    <!-- /app-header -->
+    <!-- Start::app-sidebar -->
+    {% include 'commons/side_bar.html' %}
+    <!-- End::app-sidebar -->
+
+    <!-- Start::app-content -->
+    <div class="main-content app-content">
+        <div class="container-fluid">
+  <!--            title and breadcrumb-->
+            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                <h1 class="page-title fw-semibold fs-18 mb-0">Observable Instruments</h1>
+                <div class="ms-md-1 ms-0">
+                    <nav>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="brokers">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Observable Instruments</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!--            title and breadcrumb-->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <!--            data table start-->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card-title">
+                                Observable Instruments
+                            </div>
+                            <div>
+                                <a href="/add_observable_instrument" class="btn btn-primary">Add new instrument</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="datatable-basic" class="table table-bordered text-nowrap" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Symbol</th>
+                                    <th>Expiry</th>
+                                    <th>Exchange</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for instrument in all_observable_instruments %}
+                                <tr>
+                                    <td>{{instrument['o_id']}}</td>
+                                    <td>ZERODHA - {{instrument['zerodha_name']}}<br>ANGEL - {{instrument['angel_name']}}<br>SHOONYA - {{instrument['shoonya_name']}}<br>ALICE - {{instrument['alice_symbol']}}</td>
+                                    <td>ZERODHA - {{instrument['zerodha_trading_symbol']}}<br>ANGEL - {{instrument['angel_symbol']}}<br>SHOONYA - {{instrument['shoonya_trading_symbol']}}<br>ALICE - {{instrument['alice_trading_symbol']}}</td>
+                                    <td>ZERODHA - {{instrument['zerodha_expiry']}}<br>ANGEL - {{instrument['angel_expiry']}}<br>SHOONYA - {{instrument['shoonya_expiry']}}<br>ALICE - {{instrument['alice_expiry_date']}}</td>
+                                    <td>ZERODHA - {{instrument['zerodha_exchange']}}<br>ANGEL - {{instrument['angel_exchange_segment']}}<br>SHOONYA - {{instrument['shoonya_exchange']}}<br>ALICE - {{instrument['alice_exchange']}}</td>
+
+                                    <td>
+                                        <div class="dropdown">
+                                            <a aria-label="anchor" href="javascript:void(0);"
+                                               class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown"
+                                               aria-expanded="false">
+                                                <i class="fe fe-more-vertical"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item"
+                                                       href="/delete_observable_instrument?instrument_id={{ instrument['o_id'] }}">Delete</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--            data table end-->
+
+        </div>
+    </div>
+    <!-- End::app-content -->
+
+    <!-- Footer Start -->
+    {% include 'commons/footer.html' %}
+    <!-- Footer End -->
+
+</div>
+
+
+<div class="scrollToTop">
+    <span class="arrow"><i class="ri-arrow-up-s-fill fs-20"></i></span>
+</div>
+<div id="responsive-overlay"></div>
+<!-- Popper JS -->
+<script src="{{ url_for('static', filename='libs/@popperjs/core/umd/popper.min.js') }}"></script>
+
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Defaultmenu JS -->
+<script src="{{ url_for('static', filename='js/defaultmenu.min.js') }}"></script>
+
+<!-- Node Waves JS -->
+<script src="{{ url_for('static', filename='libs/node-waves/waves.min.js') }}"></script>
+
+<!-- Sticky JS -->
+<script src="{{ url_for('static', filename='js/sticky.js') }}"></script>
+
+<!-- Simplebar JS -->
+<script src="{{ url_for('static', filename='libs/simplebar/simplebar.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/simplebar.js') }}"></script>
+
+<!-- Color Picker JS -->
+<script src="{{ url_for('static', filename='libs/@simonwep/pickr/pickr.es5.min.js') }}"></script>
+
+<!-- JSVector Maps JS -->
+<script src="{{ url_for('static', filename='libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+
+<!-- JSVector Maps MapsJS -->
+<script src="{{ url_for('static', filename='libs/jsvectormap/maps/world-merc.js') }}"></script>
+
+<!-- Apex Charts JS -->
+<script src="{{ url_for('static', filename='libs/apexcharts/apexcharts.min.js') }}"></script>
+
+<!-- Chartjs Chart JS -->
+<script src="{{ url_for('static', filename='libs/chart.js/chart.min.js') }}"></script>
+
+
+</body>
+
+</html>

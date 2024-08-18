@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-vertical-style="overlay" data-theme-mode="light"
+      data-header-styles="light" data-menu-styles="light" data-toggled="close">
+
+<head>
+
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> WEALTHI - Management Login </title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/brand-logos/favicon.ico') }}"
+          type="image/x-icon">
+
+    <!-- Main Theme Js -->
+    <script src="{{ url_for('static', filename='js/authentication-main.js') }}"></script>
+
+    <!-- Bootstrap Css -->
+    <link id="style" href="{{ url_for('static', filename='libs/bootstrap/css/bootstrap.min.css') }}"
+          rel="stylesheet">
+
+    <!-- Style Css -->
+    <link href="{{ url_for('static', filename='css/styles.min.css') }}" rel="stylesheet">
+
+    <!-- Icons Css -->
+    <link href="{{ url_for('static', filename='css/icons.min.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/swiper/swiper-bundle.min.css') }}">
+
+
+</head>
+
+<body>
+
+<div class="container-lg">
+    <div class="row justify-content-center align-items-center authentication authentication-basic h-100">
+        <div class="col-xxl-4 col-xl-5 col-lg-5 col-md-6 col-sm-8 col-12">
+            <div class="my-5 d-flex justify-content-center">
+                <a href="#">
+                    <img src="{{ url_for('static', filename='images/brand-logos/desktop-logo.png') }}" alt="logo"
+                         class="desktop-logo">
+                    <img src="{{ url_for('static', filename='images/brand-logos/desktop-dark.png') }}" alt="logo"
+                         class="desktop-dark">
+
+                </a>
+            </div>
+            <div class="card custom-card">
+                <form class="needs-validation" novalidate method="post" action="/login">
+                    <div class="card-body p-5">
+                        <p class="h5 fw-semibold mb-2">Sign In</p>
+                        <p class="mb-3 text-muted op-7 fw-normal">Welcome login to access the magic !</p>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                        <div class="row gy-3">
+                            <div class="col-xl-12">
+                                <label for="signup-firstname" class="form-label text-default">User Email</label>
+                                <input name="email" type="email" class="form-control form-control-lg"
+                                       id="signup-firstname"
+                                       placeholder="User email" required>
+                                <div class="invalid-feedback">
+                                    Please enter valid email.
+                                </div>
+                            </div>
+
+                            <div class="col-xl-12">
+                                <label for="signup-password" class="form-label text-default">Password</label>
+                                <div class="input-group">
+                                    <input name="password" type="password" class="form-control form-control-lg"
+                                           id="signup-password"
+                                           placeholder="Password" required>
+                                    <button class="btn btn-light" onclick="createpassword('signup-password',this)"
+                                            type="button" id="button-addon2"><i
+                                            class="ri-eye-off-line align-middle"></i>
+                                    </button>
+                                    <div class="invalid-feedback">
+                                        Please enter valid password.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-12 d-grid my-4">
+                                <button type="submit" class="btn btn-lg btn-primary">Sign In</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div><!-- Custom-Switcher JS -->
+<!--<script src="{{ url_for('static', filename='js/custom-switcher.min.js') }}"></script>-->
+
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Swiper JS -->
+<script src="{{ url_for('static', filename='libs/swiper/swiper-bundle.min.js') }}"></script>
+
+<!-- Internal Sign-Up JS -->
+<script src="{{ url_for('static', filename='js/authentication.js') }}"></script>
+
+<!-- Show Password JS -->
+<script src="{{ url_for('static', filename='js/show-password.js') }}"></script>
+<script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+
+</body>
+
+</html>

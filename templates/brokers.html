@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+      data-menu-styles="dark" data-toggled="close">
+
+<head>
+
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> WEALTHI - Manage Brokers </title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/brand-logos/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Choices JS -->
+    <script src="{{ url_for('static', filename='libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+
+    <!-- Main Theme Js -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Bootstrap Css -->
+    <link id="style" href="{{ url_for('static', filename='libs/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Style Css -->
+    <link href="{{ url_for('static', filename='css/styles.min.css') }}" rel="stylesheet">
+
+    <!-- Icons Css -->
+    <link href="{{ url_for('static', filename='css/icons.css') }}" rel="stylesheet">
+
+    <!-- Node Waves Css -->
+    <link href="{{ url_for('static', filename='libs/node-waves/waves.min.css') }}" rel="stylesheet">
+
+    <!-- Simplebar Css -->
+    <link href="{{ url_for('static', filename='libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
+
+    <!-- Color Picker Css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/@simonwep/pickr/themes/nano.min.css') }}">
+
+    <!-- Choices Css -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='libs/choices.js/public/assets/styles/choices.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/jsvectormap/css/jsvectormap.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/swiper/swiper-bundle.min.css') }}">
+
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.0/css/responsive.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.bootstrap5.min.css">
+
+
+</head>
+
+<body>
+
+<div class="page">
+    <!-- app-header -->
+    {% include 'commons/header.html' %}
+    <!-- /app-header -->
+    <!-- Start::app-sidebar -->
+    {% include 'commons/side_bar.html' %}
+    <!-- End::app-sidebar -->
+
+    <!-- Start::app-content -->
+    <div class="main-content app-content">
+        <div class="container-fluid">
+            <!--            title and breadcrumb-->
+            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                <h1 class="page-title fw-semibold fs-18 mb-0">Manage Brokers</h1>
+                <div class="ms-md-1 ms-0">
+                    <nav>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="brokers">Brokers</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">All Brokers</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!--            title and breadcrumb-->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+            <!--            data table start-->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card-title">
+                                Active time frame settings
+                            </div>
+                        </div>
+                        <form method="get" action="/change_active_time_frame">
+                            <div class="card-body">
+                                <label>Active time frame</label>
+                                <input class="form-control" name="active_time_frame" value="{{active_time_frame}}">
+                            </div>
+                            <div class="col-xl-6 d-grid ms-4 mb-4">
+                                <button type="submit" class="btn btn-lg btn-primary">Update</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <div class="card custom-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card-title">
+                                Mqtt Config
+                            </div>
+                        </div>
+                        <form method="get" action="/update_mqtt_config">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label>Mqtt Host</label>
+                                        <input class="form-control" name="mqtt_host" value="{{settings.mqtt_host}}">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label>Mqtt Port</label>
+                                        <input class="form-control" name="mqtt_port" value="{{settings.mqtt_port}}">
+
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label>Mqtt Topic</label>
+                                        <input class="form-control" name="mqtt_topic" value="{{settings.mqtt_topic}}">
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="col-xl-6 d-grid ms-4 mb-4">
+                                <button type="submit" class="btn btn-lg btn-primary">Update</button>
+                            </div>
+
+                        </form>
+                    </div>
+
+                    <div class="card custom-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card-title">
+                                All Brokers
+                            </div>
+                            <div>
+                                <a href="/start_load_instruments" class="btn btn-primary">Load instruments</a>
+                                <a href="/load_instruments_logs" class="btn btn-primary">Load instrument logs</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="datatable-basic" class="table table-bordered text-nowrap" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>Broker ID</th>
+                                    <th>Broker Name</th>
+                                    <th>Broker Logo</th>
+                                    <th>System Use Status</th>
+                                    <th>Public Allowed</th>
+                                    <th>System Allowed</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for broker in all_brokers %}
+                                <tr>
+                                    <td>{{broker['broker_id']}}</td>
+                                    <td>{{broker['broker_name']}}</td>
+                                    <td><img src="{{ broker['broker_logo'] }}" alt="Broker Logo" width="100"
+                                             height="100"></td>
+                                    <td>{{ 'Yes' if broker['broker_system_use_status'] == 1 else 'No' }}</td>
+                                    <td>{{ 'Yes' if broker['broker_public_allowed'] == 1 else 'No' }}</td>
+                                    <td>{{ 'Yes' if broker['broker_system_allowed'] == 1 else 'No' }}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a aria-label="anchor" href="javascript:void(0);"
+                                               class="btn btn-icon btn-sm btn-light" data-bs-toggle="dropdown"
+                                               aria-expanded="false">
+                                                <i class="fe fe-more-vertical"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                {% if broker['broker_system_use_status'] == 1 %}
+                                                <li><a class="dropdown-item"
+                                                       href="/broker/update_system_use_status?b_id={{ broker['broker_id'] }}&status=0">Disable
+                                                    System Use</a></li>
+                                                {% elif broker['broker_system_use_status'] == 0 %}
+                                                <li><a class="dropdown-item"
+                                                       href="/broker/update_system_use_status?b_id={{ broker['broker_id'] }}&status=1">Enable
+                                                    System Use</a></li>
+                                                {% endif %}
+                                                <li><a class="dropdown-item"
+                                                       href="/broker/update_config_params?b_id={{ broker['broker_id'] }}">Update
+                                                    Config Params</a></li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--            data table end-->
+
+        </div>
+    </div>
+    <!-- End::app-content -->
+
+    <!-- Footer Start -->
+    {% include 'commons/footer.html' %}
+    <!-- Footer End -->
+
+</div>
+
+
+<div class="scrollToTop">
+    <span class="arrow"><i class="ri-arrow-up-s-fill fs-20"></i></span>
+</div>
+<div id="responsive-overlay"></div>
+<!-- Popper JS -->
+<script src="{{ url_for('static', filename='libs/@popperjs/core/umd/popper.min.js') }}"></script>
+
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Defaultmenu JS -->
+<script src="{{ url_for('static', filename='js/defaultmenu.min.js') }}"></script>
+
+<!-- Node Waves JS -->
+<script src="{{ url_for('static', filename='libs/node-waves/waves.min.js') }}"></script>
+
+<!-- Sticky JS -->
+<script src="{{ url_for('static', filename='js/sticky.js') }}"></script>
+
+<!-- Simplebar JS -->
+<script src="{{ url_for('static', filename='libs/simplebar/simplebar.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/simplebar.js') }}"></script>
+
+<!-- Color Picker JS -->
+<script src="{{ url_for('static', filename='libs/@simonwep/pickr/pickr.es5.min.js') }}"></script>
+
+<!-- JSVector Maps JS -->
+<script src="{{ url_for('static', filename='libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+
+<!-- JSVector Maps MapsJS -->
+<script src="{{ url_for('static', filename='libs/jsvectormap/maps/world-merc.js') }}"></script>
+
+<!-- Apex Charts JS -->
+<script src="{{ url_for('static', filename='libs/apexcharts/apexcharts.min.js') }}"></script>
+
+<!-- Chartjs Chart JS -->
+<script src="{{ url_for('static', filename='libs/chart.js/chart.min.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+<!-- Datatables Cdn -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="{{ url_for('static', filename='js/datatables.js') }}"></script>
+
+</body>
+
+</html>
