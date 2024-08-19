@@ -85,38 +85,39 @@
             {% endif %}
             {% endwith %}
 
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card custom-card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="card-title">
-                                Logs
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <table id="datatable-basic" class="table table-bordered text-nowrap" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>Log ID</th>
-                                    <th>Log Content</th>
-                                    <th>Date</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for log in all_system_logs %}
-                                <tr>
-                                    <td>{{log['log_id']}}</td>
-                                    <td>{{log['log_content']}}</td>
-                                    <td>{{ log['log_date_time'] }}</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-
-                            </table>
-                        </div>
-                    </div>
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card custom-card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="card-title">
+                    Logs
                 </div>
             </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="datatable-basic" class="table table-bordered text-nowrap" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Log ID</th>
+                                <th>Log Content</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in all_system_logs %}
+                            <tr>
+                                <td class="text-truncate" style="max-width: 150px;">{{ log['log_id'] }}</td>
+                                <td class="text-wrap">{{ log['log_content'] }}</td>
+                                <td>{{ log['log_date_time'] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
         </div>

@@ -92,13 +92,14 @@
                                 FUT TRADES
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table id="datatable-basic" class="table table-bordered text-nowrap" style="width:100%">
                                 <thead>
                                 <tr>
                                     <th>POS ID</th>
                                     <th>TRADING SYMBOL</th>
                                     <th>NAME</th>
+                                    <th>POSITION TYPE</th>
                                     <th>ENTRY TIME</th>
                                     <th>ENTRY PRICE</th>
                                     <th>EXIT TIME</th>
@@ -112,6 +113,15 @@
                                     <td>{{trade['position_id']}}</td>
                                     <td>{{trade['zerodha_trading_symbol']}}</td>
                                     <td>{{trade['zerodha_name']}}</td>
+                                    <td>
+                                        {% if trade['position_type'] == 1 %}
+                                        LONG
+                                        {% elif trade['position_type'] == 2 %}
+                                        SHORT
+                                        {% else %}
+                                        {{ trade['position_type'] }}
+                                        {% endif %}
+                                    </td>
                                     <td>{{trade['position_entry_time']}}</td>
                                     <td>{{trade['position_entry_price']}}</td>
                                     <td>{{trade['position_exit_time']}}</td>
@@ -134,7 +144,7 @@
                                 OPT TRADES
                             </div>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body table-responsive">
                             <table id="datatable-basics" class="table table-bordered text-nowrap" style="width:100%">
                                 <thead>
                                 <tr>
