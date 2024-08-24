@@ -49,7 +49,7 @@ class InstrumentsController:
         with self.conn.cursor() as cursor:
             cursor.execute('''
                             CREATE TABLE IF NOT EXISTS angel_instruments (
-                            angel_token INT,
+                            angel_token VARCHAR(255),
                             angel_symbol VARCHAR(255),
                             angel_name VARCHAR(255),
                             angel_expiry DATE,
@@ -94,7 +94,7 @@ class InstrumentsController:
                                 alice_pdc DECIMAL(10, 2) NULL,
                                 alice_strike_price DECIMAL(10, 2),
                                 alice_symbol VARCHAR(255),
-                                alice_tick_size DECIMAL(4, 2),
+                                alice_tick_size VARCHAR(255),
                                 alice_token VARCHAR(255),
                                 alice_trading_symbol VARCHAR(255)
                             )
