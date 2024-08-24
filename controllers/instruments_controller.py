@@ -84,19 +84,19 @@ class InstrumentsController:
         with self.conn.cursor() as cursor:
             cursor.execute('''
                             CREATE TABLE IF NOT EXISTS alice_blue_instruments (
-                                alice_exchange VARCHAR(10),
-                                alice_exchange_segment VARCHAR(20),
+                                alice_exchange VARCHAR(255),
+                                alice_exchange_segment VARCHAR(255),
                                 alice_expiry_date DATE,
-                                alice_formatted_ins_name VARCHAR(50),
-                                alice_instrument_type VARCHAR(10),
+                                alice_formatted_ins_name VARCHAR(255),
+                                alice_instrument_type VARCHAR(255),
                                 alice_lot_size INT,
-                                alice_option_type VARCHAR(2),
+                                alice_option_type VARCHAR(255),
                                 alice_pdc DECIMAL(10, 2) NULL,
                                 alice_strike_price DECIMAL(10, 2),
-                                alice_symbol VARCHAR(10),
+                                alice_symbol VARCHAR(255),
                                 alice_tick_size DECIMAL(4, 2),
-                                alice_token VARCHAR(10),
-                                alice_trading_symbol VARCHAR(20)
+                                alice_token VARCHAR(255),
+                                alice_trading_symbol VARCHAR(255)
                             )
                         ''')
             self.conn.commit()
