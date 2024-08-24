@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title> WEALTHI - Manage Brokers </title>
+    <title> WEALTHI - Today Positions </title>
     <!-- Favicon -->
     <link rel="icon" href="{{ url_for('static', filename='images/brand-logos/favicon.ico') }}" type="image/x-icon">
 
@@ -126,7 +126,7 @@
                                     <td>{{trade['position_entry_price']}}</td>
                                     <td>{{trade['position_exit_time']}}</td>
                                     <td>{{trade['position_exit_price']}}</td>
-                                    <td>{{trade['profit']}}</td>
+                                    <td>{{ ((trade['profit'] or 0) * (trade['lot_size'] or 0)) | round(2) }}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
@@ -145,7 +145,7 @@
                             </div>
                         </div>
                         <div class="card-body table-responsive">
-                            <table id="datatable-basics" class="table table-bordered text-nowrap" style="width:100%">
+                            <table id="file-export" class="table table-bordered text-nowrap" style="width:100%">
                                 <thead>
                                 <tr>
                                     <th>POS ID</th>
@@ -156,6 +156,7 @@
                                     <th>ENTRY PRICE</th>
                                     <th>EXIT TIME</th>
                                     <th>EXIT PRICE</th>
+                                    <th>PROFIT POINTS</th>
                                     <th>PROFIT</th>
                                 </tr>
                                 </thead>
@@ -163,8 +164,7 @@
                                 {% for trade in opt_trades %}
                                 <tr>
                                     <td>{{ trade['opt_position_id'] }}</td>
-                                    <td>{{ trade['option_instrument']['zerodha_option']['zerodha_trading_symbol'] }}
-                                    </td>
+                                    <td>{{ trade['option_instrument']['zerodha_option']['zerodha_trading_symbol'] }}</td>
                                     <td>{{ trade['option_instrument']['zerodha_option']['zerodha_name'] }}</td>
                                     <td>
                                         {% if trade['instrument_position_type'] == 1 %}
@@ -180,10 +180,13 @@
                                     <td>{{ trade['position_exit_time'] }}</td>
                                     <td>{{ trade['position_exit_price'] }}</td>
                                     <td>{{ trade['profit'] }}</td>
+                                    <td>{{ ((trade['profit'] or 0) *
+                                        (trade['option_instrument']['zerodha_option']['zerodha_lot_size'] or 0)) |
+                                        round(2) }}
+                                    </td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
-
                             </table>
                         </div>
                     </div>
@@ -236,10 +239,23 @@
 
 <!-- Apex Charts JS -->
 <script src="{{ url_for('static', filename='libs/apexcharts/apexcharts.min.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+<!-- Datatables Cdn -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <!-- Chartjs Chart JS -->
 <script src="{{ url_for('static', filename='libs/chart.js/chart.min.js') }}"></script>
-
+<script src="{{ url_for('static', filename='js/datatables.js') }}"></script>
 
 </body>
 
