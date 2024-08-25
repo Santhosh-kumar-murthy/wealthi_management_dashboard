@@ -5,7 +5,7 @@ import zipfile
 
 import pymysql
 import pyotp
-import requests as requests
+import requests
 from pymysql.cursors import DictCursor
 
 from broker_libs.kite_trade import KiteApp, get_enctoken
@@ -180,16 +180,21 @@ class InstrumentsController:
             masters = ['NSE_symbols.txt.zip', 'NFO_symbols.txt.zip',
                        'BSE_symbols.txt.zip', 'BFO_symbols.txt.zip']
 
+            # Ensure the sh_inst directory exists
+            if not os.path.exists('sh_inst'):
+                os.makedirs('sh_inst')
+
             for zip_file in masters:
                 url = root + zip_file
                 r = requests.get(url, allow_redirects=True)
-                open(zip_file, 'wb').write(r.content)
+                with open(zip_file, 'wb') as f:
+                    f.write(r.content)
 
-                # try:
-                with zipfile.ZipFile(zip_file) as z:
-                    z.extractall(path='sh_inst')
-                # except Exception as e:
-                #     print("Invalid file", e)
+                try:
+                    with zipfile.ZipFile(zip_file) as z:
+                        z.extractall(path='sh_inst')
+                except Exception as e:
+                    print("Invalid file", e)
 
                 os.remove(zip_file)
 
@@ -216,14 +221,14 @@ class InstrumentsController:
                                     '(%s, %s, %s, %s, %s, %s, %s)', values)
                                 self.conn.commit()
 
-            for txt_file in glob.glob('sh_inst/*.txt'):
-                if txt_file == r"sh_inst\BFO_symbols.txt" or txt_file == r"sh_inst\NFO_symbols.txt":
+            for txt_file in glob.glob(os.path.join('sh_inst', '*.txt')):
+                if txt_file.endswith('BFO_symbols.txt') or txt_file.endswith('NFO_symbols.txt'):
                     load_data_into_db(txt_file, 'opt')
-                elif txt_file == r"sh_inst\NSE_symbols.txt" or txt_file == r"sh_inst\BSE_symbols.txt":
+                elif txt_file.endswith('NSE_symbols.txt') or txt_file.endswith('BSE_symbols.txt'):
                     load_data_into_db(txt_file, 'eq')
                 os.remove(txt_file)
 
-            # os.rmdir('sh_inst')
+            os.rmdir('sh_inst')
             return True, "Shoonya instruments load successful"
         except Exception as e:
             return False, str(e)
