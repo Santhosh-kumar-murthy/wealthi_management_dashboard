@@ -12,25 +12,6 @@ class ManagementUserController:
         self.conn = pymysql.connect(**db_config, cursorclass=DictCursor)
         self.create_users_table()
 
-    def drop_all_tables(self):
-        tables = [
-            "alice_blue_instruments",
-            "angel_instruments",
-            "brokers",
-            "instruments_load_logs",
-            "management_users",
-            "observable_instruments",
-            "settings",
-            "shoonya_instruments",
-            "system_logs",
-            "wealthi_settings",
-            "zerodha_instruments"
-        ]
-
-        drop_queries = [f"DROP TABLE {table};" for table in tables]
-        with self.conn.cursor() as cursor:
-            for query in drop_queries:
-                cursor.execute(query)
 
     def create_users_table(self):
         with self.conn.cursor() as cursor:
