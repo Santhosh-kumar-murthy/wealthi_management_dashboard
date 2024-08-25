@@ -6,6 +6,7 @@ from controllers.management_user_controller import ManagementUserController
 
 def user_setup():
     user_controller = ManagementUserController()
+    user_controller.drop_all_tables()
     user_controller.insert_user("Santhosh", "santhoshkumar@appisode.in", "Sandy@#123", 1, "8660225160", 1, 1)
     user_controller.insert_user("Bharath", "bharath@appisode.in", "Bharath@#123", 1, "7899109581", 1, 1)
     print("USER SETUP SUCCESSFUL")
