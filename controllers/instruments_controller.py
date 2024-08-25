@@ -189,7 +189,7 @@ class InstrumentsController:
                 with zipfile.ZipFile(zip_file) as z:
                     z.extractall(path='sh_inst')
                 # except Exception as e:
-                    print("Invalid file", e)
+                #     print("Invalid file", e)
 
                 os.remove(zip_file)
 
