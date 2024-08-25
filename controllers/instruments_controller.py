@@ -223,7 +223,7 @@ class InstrumentsController:
                     load_data_into_db(txt_file, 'eq')
                 os.remove(txt_file)
 
-            os.rmdir('sh_inst')
+            # os.rmdir('sh_inst')
             return True, "Shoonya instruments load successful"
         except Exception as e:
             return False, str(e)
