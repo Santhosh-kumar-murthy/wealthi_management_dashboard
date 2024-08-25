@@ -185,10 +185,10 @@ class InstrumentsController:
                 r = requests.get(url, allow_redirects=True)
                 open(zip_file, 'wb').write(r.content)
 
-                try:
-                    with zipfile.ZipFile(zip_file) as z:
-                        z.extractall(path='sh_inst')
-                except Exception as e:
+                # try:
+                with zipfile.ZipFile(zip_file) as z:
+                    z.extractall(path='sh_inst')
+                # except Exception as e:
                     print("Invalid file", e)
 
                 os.remove(zip_file)
