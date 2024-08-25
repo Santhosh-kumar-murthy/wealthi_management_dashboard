@@ -12,7 +12,6 @@ class ManagementUserController:
         self.conn = pymysql.connect(**db_config, cursorclass=DictCursor)
         self.create_users_table()
 
-
     def create_users_table(self):
         with self.conn.cursor() as cursor:
             cursor.execute('''CREATE TABLE IF NOT EXISTS management_users (
