@@ -13,20 +13,24 @@ class ManagementUserController:
         self.create_users_table()
 
     def drop_all_tables(self):
+        tables = [
+            "alice_blue_instruments",
+            "angel_instruments",
+            "brokers",
+            "instruments_load_logs",
+            "management_users",
+            "observable_instruments",
+            "settings",
+            "shoonya_instruments",
+            "system_logs",
+            "wealthi_settings",
+            "zerodha_instruments"
+        ]
+
+        drop_queries = [f"DROP TABLE {table};" for table in tables]
         with self.conn.cursor() as cursor:
-            cursor.execute('''DROP TABLE alice_blue_instruments;
-                DROP TABLE angel_instruments;
-                DROP TABLE brokers;
-                DROP TABLE instruments_load_logs;
-                DROP TABLE management_users;
-                DROP TABLE observable_instruments;
-                DROP TABLE settings;
-                DROP TABLE shoonya_instruments;
-                DROP TABLE system_logs;
-                DROP TABLE wealthi_settings;
-                DROP TABLE zerodha_instruments;
-                '''
-            )
+            for query in drop_queries:
+                cursor.execute(query)
 
     def create_users_table(self):
         with self.conn.cursor() as cursor:
