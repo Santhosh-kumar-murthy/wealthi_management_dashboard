@@ -64,8 +64,6 @@ def today_trades():
         trades_controller = TradesController()
         fut_trades = trades_controller.get_fut_trades()
         opt_trades = trades_controller.get_opt_trades()
-        print(opt_trades)
-        print(fut_trades)
         for trade in opt_trades:
             trade['option_instrument'] = json.loads(trade['option_instrument'])
         return render_template('today_trades.html', fut_trades=fut_trades, opt_trades=opt_trades)
