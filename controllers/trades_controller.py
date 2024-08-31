@@ -10,7 +10,7 @@ class TradesController:
 
     def get_fut_trades(self):
         with self.conn.cursor() as cursor:
-            cursor.execute("SELECT * FROM fut_positions WHERE DATE(position_exit_time) = CURDATE() OR position_exit_time IS NULL;")
+            cursor.execute("SELECT * FROM positions WHERE DATE(position_exit_time) = CURDATE() OR position_exit_time IS NULL;")
             today_fut_trades = cursor.fetchall()
         return today_fut_trades
 

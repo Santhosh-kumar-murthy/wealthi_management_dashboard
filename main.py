@@ -1,11 +1,14 @@
+import pymysql
 from flask import Flask, render_template, session, redirect, request, url_for, flash
 from pya3 import *
+from pymysql.cursors import DictCursor
 
 from controllers.instruments_controller import InstrumentsController
 from controllers.instruments_get_controller import InstrumentsGetController
 from controllers.logs_controller import LogsController
 from controllers.settings_controller import SettingsController
 from controllers.trades_controller import TradesController
+from database_config import db_config
 from setup import *
 
 app = Flask(__name__)
@@ -63,6 +66,8 @@ def today_trades():
     if session.get('is_logged_in') is True:
         trades_controller = TradesController()
         fut_trades = trades_controller.get_fut_trades()
+        for trade in fut_trades:
+            print(trade)
         opt_trades = trades_controller.get_opt_trades()
         for trade in opt_trades:
             trade['option_instrument'] = json.loads(trade['option_instrument'])
@@ -147,16 +152,17 @@ def add_observable_instrument():
             zerodha_trading_symbol = request.form['zerodha_trading_symbol']
             angel_trading_symbol = request.form['angel_trading_symbol']
             shoonya_trading_symbol = request.form['shoonya_trading_symbol']
-            alice_blue_trading_symbol = request.form['alice_blue_trading_symbol']
+            alice_blue_symbol = request.form['alice_blue_symbol']
+            search_key = request.form['search_key']
             instrument_manager.add_observable_instrument(zerodha_trading_symbol, angel_trading_symbol,
-                                                         shoonya_trading_symbol, alice_blue_trading_symbol)
+                                                         shoonya_trading_symbol, alice_blue_symbol, search_key)
             flash('Added successfully', 'success')
             return redirect(url_for('observable_instruments'))
         else:
-            shoonya_instruments = instrument_manager.get_fut_idx_shoonya()
-            angel_instruments = instrument_manager.get_fut_idx_angel()
-            zerodha_instruments = instrument_manager.get_fut_zerodha()
-            alice_blue_instruments = instrument_manager.get_fut_alice_blue()
+            shoonya_instruments = instrument_manager.get_idx_shoonya()
+            angel_instruments = instrument_manager.get_idx_angel()
+            zerodha_instruments = instrument_manager.get_idx_zerodha()
+            alice_blue_instruments = instrument_manager.get_idx_alice_blue()
             return render_template('add_observable_instrument.html',
                                    zerodha_instruments=zerodha_instruments,
                                    angel_instruments=angel_instruments,
@@ -249,6 +255,9 @@ def system_logs():
 def observable_instruments():
     instruments_controller = InstrumentsGetController()
     all_observable_instruments = instruments_controller.get_observable_instruments()
+    print(all_observable_instruments)
+    for ins in all_observable_instruments:
+        print(ins)
     return render_template('observable_instruments.html', all_observable_instruments=all_observable_instruments)
 
 
@@ -275,6 +284,61 @@ def logout():
     session.clear()
     flash('Logout successful', 'success')
     return redirect(url_for('login'))
+
+
+def get_nearby_fut():
+    connection = pymysql.connect(**db_config, cursorclass=DictCursor)
+    instruments_controller = InstrumentsGetController()
+    all_observable_instruments = instruments_controller.get_observable_instruments()
+    future_instrument_list = []
+    for instrument in all_observable_instruments:
+        with connection.cursor() as cursor:
+            query = """
+                SELECT * 
+                FROM alice_blue_instruments 
+                WHERE (alice_instrument_type = 'FUTIDX' OR alice_instrument_type = 'IF') AND alice_symbol = %s
+                AND DATE(alice_expiry_date) >= curdate() ORDER BY alice_expiry_date ASC LIMIT 1;
+                """
+            cursor.execute(query, instrument['search_key'])
+            # Fetching all results
+            results = cursor.fetchone()
+            instrument_detail = {
+                "alice": results,
+            }
+            future_instrument_list.append(instrument_detail)
+
+            query = """
+                SELECT * FROM zerodha_instruments WHERE zerodha_segment IN ('NFO-FUT', 'BFO-FUT') AND zerodha_name = %s
+                AND DATE(zerodha_expiry) >= curdate() ORDER BY zerodha_expiry ASC LIMIT 1; """
+            cursor.execute(query, instrument['search_key'])
+            # Fetching all results
+            results = cursor.fetchone()
+            instrument_detail = {
+                "Zerodha": results,
+            }
+            future_instrument_list.append(instrument_detail)
+
+            query = """SELECT * FROM angel_instruments WHERE angel_instrument_type='FUTIDX' AND angel_name = %s
+                            AND DATE(angel_expiry) >= curdate() ORDER BY angel_expiry ASC LIMIT 1; """
+            cursor.execute(query, instrument['search_key'])
+            # Fetching all results
+            results = cursor.fetchone()
+            instrument_detail = {
+                "angel": results,
+            }
+            future_instrument_list.append(instrument_detail)
+
+            query = """SELECT * FROM shoonya_instruments WHERE shoonya_instrument_type='FUTIDX' AND shoonya_symbol = %s
+                            AND DATE(shoonya_expiry) >= curdate() ORDER BY shoonya_expiry ASC LIMIT 1; """
+            cursor.execute(query, instrument['search_key'])
+            # Fetching all results
+            results = cursor.fetchone()
+            instrument_detail = {
+                "shoonya": results,
+            }
+            future_instrument_list.append(instrument_detail)
+
+    return future_instrument_list
 
 
 if __name__ == '__main__':

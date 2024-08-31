@@ -103,8 +103,8 @@
                                     <th>Id</th>
                                     <th>Name</th>
                                     <th>Symbol</th>
-                                    <th>Expiry</th>
                                     <th>Exchange</th>
+                                    <th>SEARCH KEY</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
@@ -114,8 +114,8 @@
                                     <td>{{instrument['o_id']}}</td>
                                     <td>ZERODHA - {{instrument['zerodha_name']}}<br>ANGEL - {{instrument['angel_name']}}<br>SHOONYA - {{instrument['shoonya_name']}}<br>ALICE - {{instrument['alice_symbol']}}</td>
                                     <td>ZERODHA - {{instrument['zerodha_trading_symbol']}}<br>ANGEL - {{instrument['angel_symbol']}}<br>SHOONYA - {{instrument['shoonya_trading_symbol']}}<br>ALICE - {{instrument['alice_trading_symbol']}}</td>
-                                    <td>ZERODHA - {{instrument['zerodha_expiry']}}<br>ANGEL - {{instrument['angel_expiry']}}<br>SHOONYA - {{instrument['shoonya_expiry']}}<br>ALICE - {{instrument['alice_expiry_date']}}</td>
                                     <td>ZERODHA - {{instrument['zerodha_exchange']}}<br>ANGEL - {{instrument['angel_exchange_segment']}}<br>SHOONYA - {{instrument['shoonya_exchange']}}<br>ALICE - {{instrument['alice_exchange']}}</td>
+                                    <td>{{instrument['search_key']}}</td>
 
                                     <td>
                                         <div class="dropdown">

@@ -92,12 +92,18 @@
                             <form class="needs-validation" novalidate
                                   action="/add_observable_instrument"
                                   method="post">
-                                <div class="col-xl-12 mb-3">
-                                    <p class="fw-semibold mb-2">Select Instrument Type</p>
-                                    <select required class="form-control ">
-                                        <option value="fut" selected>FUTURES</option>
-                                        <option value="eq" disabled>EQUITY</option>
-                                    </select>
+                                <div class="row">
+                                    <div class="col-xl-6 mb-3">
+                                        <p class="fw-semibold mb-2">Select Instrument Type</p>
+                                        <select required class="form-control ">
+                                            <option value="idx" selected>INDEX</option>
+                                            <option value="eq" disabled>EQUITY</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-xl-6 mb-3">
+                                        <p class="fw-semibold mb-2">Search key</p>
+                                        <input class="form-control" name="search_key" required>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xl-6 mb-3">
@@ -106,7 +112,9 @@
                                                 name="zerodha_trading_symbol">
                                             <option value="">Select zerodha symbol</option>
                                             {% for instrument in zerodha_instruments%}
-                                            <option value="{{instrument.zerodha_trading_symbol}}">{{instrument.zerodha_trading_symbol}} - {{instrument.zerodha_expiry}}</option>
+                                            <option value="{{instrument.zerodha_trading_symbol}}">
+                                                {{instrument.zerodha_trading_symbol}}
+                                            </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -117,7 +125,8 @@
                                                 name="angel_trading_symbol">
                                             <option value="">Select Angel One symbol</option>
                                             {% for instrument in angel_instruments%}
-                                            <option value="{{instrument.angel_symbol}}">{{instrument.angel_symbol}} - {{instrument.angel_expiry}}</option>
+                                            <option value="{{instrument.angel_symbol}}">{{instrument.angel_symbol}}
+                                            </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -128,7 +137,9 @@
                                                 name="shoonya_trading_symbol">
                                             <option value="">Select Shoonya symbol</option>
                                             {% for instrument in shoonya_instruments%}
-                                            <option value="{{instrument.shoonya_trading_symbol}}">{{instrument.shoonya_trading_symbol}} - {{instrument.shoonya_expiry}}</option>
+                                            <option value="{{instrument.shoonya_trading_symbol}}">
+                                                {{instrument.shoonya_trading_symbol}}
+                                            </option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -136,10 +147,11 @@
                                     <div class="col-xl-6 mb-3">
                                         <p class="fw-semibold mb-2">Select Alice Blue Instrument</p>
                                         <select required class="form-control choices-single-default" data-trigger
-                                                name="alice_blue_trading_symbol">
+                                                name="alice_blue_symbol">
                                             <option value="">Select Alice symbol</option>
                                             {% for instrument in alice_blue_instruments %}
-                                            <option value="{{instrument.alice_trading_symbol}}">{{instrument.alice_trading_symbol}} - {{instrument.alice_expiry_date}}</option>
+                                            <option value="{{instrument.alice_symbol}}">{{instrument.alice_symbol}}
+                                            </option>
                                             {% endfor %}
                                         </select>
                                     </div>

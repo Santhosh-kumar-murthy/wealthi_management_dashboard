@@ -99,6 +99,7 @@
                                     <th>POS ID</th>
                                     <th>TRADING SYMBOL</th>
                                     <th>NAME</th>
+                                    <th>TRADE TYPE</th>
                                     <th>POSITION TYPE</th>
                                     <th>ENTRY TIME</th>
                                     <th>ENTRY PRICE</th>
@@ -122,6 +123,17 @@
                                         {{ trade['position_type'] }}
                                         {% endif %}
                                     </td>
+                                    <td>
+                                        {% if trade['instrument_position_type'] == 1 %}
+                                        FUT BUT
+                                        {% elif trade['instrument_position_type'] == 2 %}
+                                        FUT SELL
+                                        {% elif trade['instrument_position_type'] == 3 %}
+                                        OPT BUY
+                                        {% elif trade['instrument_position_type'] == 4 %}
+                                        OPT SELL
+                                        {% endif %}
+                                    </td>
                                     <td>{{trade['position_entry_time']}}</td>
                                     <td>{{trade['position_entry_price']}}</td>
                                     <td>{{trade['position_exit_time']}}</td>
@@ -136,64 +148,6 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card custom-card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <div class="card-title">
-                                OPT TRADES
-                            </div>
-                        </div>
-                        <div class="card-body table-responsive">
-                            <table id="file-export" class="table table-bordered text-nowrap" style="width:100%">
-                                <thead>
-                                <tr>
-                                    <th>POS ID</th>
-                                    <th>TRADING SYMBOL</th>
-                                    <th>NAME</th>
-                                    <th>POSITION TYPE</th>
-                                    <th>ENTRY TIME</th>
-                                    <th>ENTRY PRICE</th>
-                                    <th>EXIT TIME</th>
-                                    <th>EXIT PRICE</th>
-                                    <th>PROFIT POINTS</th>
-                                    <th>PROFIT</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for trade in opt_trades %}
-                                <tr>
-                                    <td>{{ trade['opt_position_id'] }}</td>
-                                    <td>{{ trade['option_instrument']['zerodha_option']['zerodha_trading_symbol'] }}</td>
-                                    <td>{{ trade['option_instrument']['zerodha_option']['zerodha_name'] }}</td>
-                                    <td>
-                                        {% if trade['instrument_position_type'] == 1 %}
-                                        OPT BUY
-                                        {% elif trade['instrument_position_type'] == 2 %}
-                                        OPT SELL
-                                        {% else %}
-                                        {{ trade['instrument_position_type'] }}
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ trade['position_entry_time'] }}</td>
-                                    <td>{{ trade['position_entry_price'] }}</td>
-                                    <td>{{ trade['position_exit_time'] }}</td>
-                                    <td>{{ trade['position_exit_price'] }}</td>
-                                    <td>{{ trade['profit'] }}</td>
-                                    <td>{{ ((trade['profit'] or 0) *
-                                        (trade['option_instrument']['zerodha_option']['zerodha_lot_size'] or 0)) |
-                                        round(2) }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     </div>
     <!-- End::app-content -->

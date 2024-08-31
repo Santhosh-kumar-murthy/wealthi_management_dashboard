@@ -30,7 +30,7 @@ def broker_setup():
 
     broker_manager.insert_broker('Shoonya',
                                  'https://cxotoday.com/wp-content/uploads/2023/05/shoonya_by_finvasia-Logo.png',
-                                 json.dumps({"user": "FA329812", "pwd": "Sandy@#123",
+                                 json.dumps({"user": "FA329812", "pwd": "Sandy@#12345",
                                              "factor2": 'F462T2IC47J76N724E7PX5T3QSCHQ3O3', "vc": "FA329812_U",
                                              "app_key": "58e4edd319eb1625b9f0cf4ef6867bd5", "imei": "abc1234"}), 0, 1,
                                  1,

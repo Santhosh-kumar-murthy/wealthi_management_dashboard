@@ -40,48 +40,49 @@ class InstrumentsGetController:
                                 shoonya_instrument_type varchar(255),
                                 shoonya_option_type varchar(255),
                                 PRIMARY KEY (o_id),
-                                alice_exchange VARCHAR(10),
-                                alice_exchange_segment VARCHAR(20),
+                                alice_exchange VARCHAR(255),
+                                alice_exchange_segment VARCHAR(255),
                                 alice_expiry_date DATE,
-                                alice_formatted_ins_name VARCHAR(50),
-                                alice_instrument_type VARCHAR(10),
+                                alice_formatted_ins_name VARCHAR(255),
+                                alice_instrument_type VARCHAR(255),
                                 alice_lot_size INT,
-                                alice_option_type VARCHAR(2),
+                                alice_option_type VARCHAR(255),
                                 alice_pdc DECIMAL(10, 2) NULL,
                                 alice_strike_price DECIMAL(10, 2),
-                                alice_symbol VARCHAR(10),
-                                alice_tick_size DECIMAL(4, 2),
-                                alice_token VARCHAR(10),
-                                alice_trading_symbol VARCHAR(20)
+                                alice_symbol VARCHAR(255),
+                                alice_token VARCHAR(255),
+                                alice_trading_symbol VARCHAR(255),
+                                search_key VARCHAR(255)
                             )
                         ''')
             self.conn.commit()
 
-    def get_fut_idx_shoonya(self):
+    def get_idx_shoonya(self):
         with self.conn.cursor() as cursor:
             cursor.execute('SELECT * FROM shoonya_instruments WHERE shoonya_instrument_type=%s',
-                           'FUTIDX')
+                           'index')
             shoonya_instruments = cursor.fetchall()
         return shoonya_instruments
 
-    def get_fut_idx_angel(self):
+    def get_idx_angel(self):
         with self.conn.cursor() as cursor:
             cursor.execute('SELECT * FROM angel_instruments WHERE angel_instrument_type=%s',
-                           'FUTIDX')
+                           'AMXIDX')
             angel_instruments = cursor.fetchall()
         return angel_instruments
 
-    def get_fut_alice_blue(self):
+    def get_idx_alice_blue(self):
         with self.conn.cursor() as cursor:
-            cursor.execute('SELECT * FROM alice_blue_instruments WHERE alice_instrument_type=%s OR alice_instrument_type = %s',
-                           ('FUTIDX','IF'))
+            cursor.execute(
+                'SELECT * FROM alice_blue_instruments WHERE alice_exchange_segment = %s OR alice_exchange_segment = %s',
+                ('nse_idx', 'bse_idx'))
             alice_instruments = cursor.fetchall()
         return alice_instruments
 
-    def get_fut_zerodha(self):
+    def get_idx_zerodha(self):
         with self.conn.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM zerodha_instruments WHERE zerodha_segment IN ('NFO-FUT', 'BFO-FUT')")
+                "SELECT * FROM zerodha_instruments WHERE zerodha_segment = %s", 'INDICES')
             angel_instruments = cursor.fetchall()
         return angel_instruments
 
@@ -99,7 +100,7 @@ class InstrumentsGetController:
             self.conn.commit()
 
     def add_observable_instrument(self, zerodha_trading_symbol, angel_trading_symbol, shoonya_trading_symbol,
-                                  alice_trading_symbol):
+                                  alice_symbol, search_key):
         with self.conn.cursor() as cursor:
             cursor.execute("SELECT * FROM zerodha_instruments WHERE zerodha_trading_symbol = %s",
                            zerodha_trading_symbol)
@@ -110,8 +111,8 @@ class InstrumentsGetController:
             cursor.execute("SELECT * FROM shoonya_instruments WHERE shoonya_trading_symbol = %s",
                            shoonya_trading_symbol)
             shoonya_instrument = cursor.fetchone()
-            cursor.execute("SELECT * FROM alice_blue_instruments WHERE alice_trading_symbol = %s",
-                           alice_trading_symbol)
+            cursor.execute("SELECT * FROM alice_blue_instruments WHERE alice_symbol = %s",
+                           alice_symbol)
             alice_instrument = cursor.fetchone()
             # Insert into observable_instruments table
             cursor.execute('''
@@ -133,8 +134,9 @@ class InstrumentsGetController:
                                 alice_formatted_ins_name, alice_instrument_type, 
                                 alice_lot_size, alice_option_type,
                                  alice_pdc, alice_strike_price, 
-                                alice_symbol, alice_tick_size, 
-                                alice_token, alice_trading_symbol
+                                alice_symbol,  
+                                alice_token, alice_trading_symbol,
+                                search_key
                            ) VALUES (
                            %s, %s, %s, %s, %s, %s,
                             %s, %s, %s, %s, %s, %s,
@@ -142,7 +144,7 @@ class InstrumentsGetController:
                               %s, %s, %s, %s, %s, %s,
                                %s,%s, %s, %s, %s, %s,
                                 %s, %s, %s, %s, %s, %s,
-                                 %s, %s)
+                                 %s,%s)
                        ''', (
                 zerodha_instrument['zerodha_instrument_token'], zerodha_instrument['zerodha_exchange_token'],
                 zerodha_instrument['zerodha_trading_symbol'], zerodha_instrument['zerodha_name'],
@@ -161,7 +163,7 @@ class InstrumentsGetController:
                 alice_instrument['alice_instrument_type'], alice_instrument['alice_lot_size'],
                 alice_instrument['alice_option_type'], alice_instrument['alice_pdc'],
                 alice_instrument['alice_strike_price'], alice_instrument['alice_symbol'],
-                alice_instrument['alice_tick_size'], alice_instrument['alice_token'],
-                alice_instrument['alice_trading_symbol']
+                alice_instrument['alice_token'],
+                alice_instrument['alice_trading_symbol'], search_key
             ))
             self.conn.commit()
