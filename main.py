@@ -66,12 +66,7 @@ def today_trades():
     if session.get('is_logged_in') is True:
         trades_controller = TradesController()
         fut_trades = trades_controller.get_fut_trades()
-        for trade in fut_trades:
-            print(trade)
-        opt_trades = trades_controller.get_opt_trades()
-        for trade in opt_trades:
-            trade['option_instrument'] = json.loads(trade['option_instrument'])
-        return render_template('today_trades.html', fut_trades=fut_trades, opt_trades=opt_trades)
+        return render_template('today_trades.html', fut_trades=fut_trades)
     else:
         flash('Please login to use the platform.', 'danger')
         return redirect(url_for('login'))
