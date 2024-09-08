@@ -89,13 +89,15 @@
                     <div class="card custom-card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <div class="card-title">
-                                FUT TRADES
+                                TRADES
                             </div>
                         </div>
                         <div class="card-body table-responsive">
                             <table id="datatable-basic" class="table table-bordered text-nowrap" style="width:100%">
                                 <thead>
                                 <tr>
+                                    <th>ACTION</th>
+                                    <th>EXPIRY</th>
                                     <th>POS ID</th>
                                     <th>TRADING SYMBOL</th>
                                     <th>NAME</th>
@@ -111,6 +113,14 @@
                                 <tbody>
                                 {% for trade in fut_trades %}
                                 <tr>
+                                    <td>
+                                    {% if trade['position_exit_time'] == None %}
+                                        <a href="/close_trade?pos_id={{trade['position_id']}}" class="btn btn-primary">Exit</a>
+                                    {% else %}
+                                    CLOSED
+                                    {% endif %}
+                                    </td>
+                                    <td>{{trade['expiry']}}</td>
                                     <td>{{trade['position_id']}}</td>
                                     <td>{{trade['zerodha_trading_symbol']}}</td>
                                     <td>{{trade['zerodha_name']}}</td>

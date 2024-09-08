@@ -44,7 +44,8 @@ class TradesController:
                                 profit FLOAT,
                                 lot_size INT,
                                 position_qty INT,
-                                time_frame VARCHAR(255)  
+                                time_frame VARCHAR(255),
+                                expiry DATE  
                             )
                         ''')
             self.conn.commit()

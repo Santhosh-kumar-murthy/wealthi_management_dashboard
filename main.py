@@ -6,6 +6,7 @@ from pymysql.cursors import DictCursor
 from controllers.instruments_controller import InstrumentsController
 from controllers.instruments_get_controller import InstrumentsGetController
 from controllers.logs_controller import LogsController
+from controllers.mqtt_publisher import MqttPublisher
 from controllers.settings_controller import SettingsController
 from controllers.trades_controller import TradesController
 from database_config import db_config
@@ -70,6 +71,19 @@ def today_trades():
     else:
         flash('Please login to use the platform.', 'danger')
         return redirect(url_for('login'))
+
+
+@app.route('/close_trade')
+def close_trade():
+    pos_id = request.args.get('pos_id')
+    mqtt_publisher = MqttPublisher()
+    mqtt_msg = json.dumps({
+        "type": "force_exit",
+        "pos_id": pos_id
+    }, default=str)
+    mqtt_publisher.publish_payload(mqtt_msg)
+    flash("message sent to exit position : id : " + pos_id)
+    return redirect(url_for('today_trades'))
 
 
 @app.route('/users_add')
