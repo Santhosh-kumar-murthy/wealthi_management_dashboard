@@ -5,9 +5,9 @@ db_config = {
     'database': 'wealthi'
 }
 
-db_config_hastar = {
-    'host': 'localhost',
-    'user': 'hastar',
-    'password': 'Hastar@#123',
-    'database': 'hastar'
-}
+# db_config_hastar = {
+#     'host': 'localhost',
+#     'user': 'hastar',
+#     'password': 'Hastar@#123',
+#     'database': 'hastar'
+# }
