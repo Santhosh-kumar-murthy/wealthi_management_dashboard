@@ -1,6 +1,7 @@
 db_config = {
     'host': 'localhost',
     'user': 'wealthi_admin',
+    'port': 3306,
     'password': 'Wealthi@#123',
     'database': 'wealthi'
 }
