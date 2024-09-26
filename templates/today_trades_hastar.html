@@ -148,6 +148,7 @@
                                     <td>{{trade['position_entry_price']}}</td>
                                     <td>{{trade['position_exit_time']}}</td>
                                     <td>{{trade['position_exit_price']}}</td>
+                                    <td>{{trade['time_frame']}}</td>
                                     <td>{{ ((trade['profit'] or 0) * (trade['lot_size'] or 0)) | round(2) }}</td>
                                 </tr>
                                 {% endfor %}
