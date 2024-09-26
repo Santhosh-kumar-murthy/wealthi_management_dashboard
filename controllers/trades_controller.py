@@ -68,6 +68,6 @@ class TradesController:
     def get_hastar_trades(self):
         with self.conn2.cursor() as cursor:
             cursor.execute(
-                "SELECT * FROM positions WHERE DATE(position_exit_time) = CURDATE()")
+                "SELECT * FROM positions WHERE DATE(position_entry_time) = CURDATE()")
             today_fut_trades = cursor.fetchall()
         return today_fut_trades
