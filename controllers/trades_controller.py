@@ -3,13 +3,13 @@ from contextlib import closing
 import pymysql
 from pymysql.cursors import DictCursor
 
-from database_config import db_config
+from database_config import db_config, db_config_hastar
 
 
 class TradesController:
     def __init__(self):
         self.conn = pymysql.connect(**db_config, cursorclass=DictCursor)
-        # self.conn2 = pymysql.connect(**db_config_hastar, cursorclass=DictCursor)
+        self.conn2 = pymysql.connect(**db_config_hastar, cursorclass=DictCursor)
         self.create_positions_table()
 
     def create_positions_table(self):
@@ -65,9 +65,9 @@ class TradesController:
             today_opt_trades = cursor.fetchall()
         return today_opt_trades
 
-    # def get_hastar_trades(self):
-    #     with self.conn2.cursor() as cursor:
-    #         cursor.execute(
-    #             "SELECT * FROM positions WHERE DATE(position_exit_time) = CURDATE()")
-    #         today_fut_trades = cursor.fetchall()
-    #     return today_fut_trades
+    def get_hastar_trades(self):
+        with self.conn2.cursor() as cursor:
+            cursor.execute(
+                "SELECT * FROM positions WHERE DATE(position_exit_time) = CURDATE()")
+            today_fut_trades = cursor.fetchall()
+        return today_fut_trades

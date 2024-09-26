@@ -73,15 +73,15 @@ def today_trades():
         return redirect(url_for('login'))
 
 
-# @app.route('/today_trades_hastar')
-# def today_trades_hastar():
-#     if session.get('is_logged_in') is True:
-#         trades_controller = TradesController()
-#         hastar_trades = trades_controller.get_hastar_trades()
-#         return render_template('today_trades_hastar.html', fut_trades=hastar_trades)
-#     else:
-#         flash('Please login to use the platform.', 'danger')
-#         return redirect(url_for('login'))
+@app.route('/today_trades_hastar')
+def today_trades_hastar():
+    if session.get('is_logged_in') is True:
+        trades_controller = TradesController()
+        hastar_trades = trades_controller.get_hastar_trades()
+        return render_template('today_trades_hastar.html', fut_trades=hastar_trades)
+    else:
+        flash('Please login to use the platform.', 'danger')
+        return redirect(url_for('login'))
 
 
 @app.route('/close_trade')
