@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-nav-layout="vertical" data-theme-mode="light" data-header-styles="light"
+      data-menu-styles="dark" data-toggled="close">
+
+<head>
+
+    <!-- Meta Data -->
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=no'>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title> WEALTHI - Today Positions </title>
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='images/brand-logos/favicon.ico') }}" type="image/x-icon">
+
+    <!-- Choices JS -->
+    <script src="{{ url_for('static', filename='libs/choices.js/public/assets/scripts/choices.min.js') }}"></script>
+
+    <!-- Main Theme Js -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- Bootstrap Css -->
+    <link id="style" href="{{ url_for('static', filename='libs/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <!-- Style Css -->
+    <link href="{{ url_for('static', filename='css/styles.min.css') }}" rel="stylesheet">
+
+    <!-- Icons Css -->
+    <link href="{{ url_for('static', filename='css/icons.css') }}" rel="stylesheet">
+
+    <!-- Node Waves Css -->
+    <link href="{{ url_for('static', filename='libs/node-waves/waves.min.css') }}" rel="stylesheet">
+
+    <!-- Simplebar Css -->
+    <link href="{{ url_for('static', filename='libs/simplebar/simplebar.min.css') }}" rel="stylesheet">
+
+    <!-- Color Picker Css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/@simonwep/pickr/themes/nano.min.css') }}">
+
+    <!-- Choices Css -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='libs/choices.js/public/assets/styles/choices.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/jsvectormap/css/jsvectormap.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/swiper/swiper-bundle.min.css') }}">
+
+
+</head>
+
+<body>
+
+<div class="page">
+    <!-- app-header -->
+    {% include 'commons/header.html' %}
+    <!-- /app-header -->
+    <!-- Start::app-sidebar -->
+    {% include 'commons/side_bar.html' %}
+    <!-- End::app-sidebar -->
+
+    <!-- Start::app-content -->
+    <div class="main-content app-content">
+        <div class="container-fluid">
+            <div class="d-md-flex d-block align-items-center justify-content-between my-4 page-header-breadcrumb">
+                <h1 class="page-title fw-semibold fs-18 mb-0">Users</h1>
+                <div class="ms-md-1 ms-0">
+                    <nav>
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="brokers">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Users</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <!--            title and breadcrumb-->
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card custom-card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="card-title">
+                                TRADES
+                            </div>
+                        </div>
+                        <div class="card-body table-responsive">
+                            <table id="file-export" class="table table-bordered text-nowrap" style="width:100%">
+                                <thead>
+                                <tr>
+                                    <th>ACTION</th>
+                                    <th>EXPIRY</th>
+                                    <th>POS ID</th>
+                                    <th>TRADING SYMBOL</th>
+                                    <th>NAME</th>
+                                    <th>TRADE TYPE</th>
+                                    <th>POSITION TYPE</th>
+                                    <th>ENTRY TIME</th>
+                                    <th>ENTRY PRICE</th>
+                                    <th>EXIT TIME</th>
+                                    <th>EXIT PRICE</th>
+                                    <th>PROFIT</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for trade in fut_trades %}
+                                <tr>
+                                    <td>
+                                    {% if trade['position_exit_time'] == None %}
+                                        <a href="/close_trade?pos_id={{trade['position_id']}}" class="btn btn-primary">Exit</a>
+                                    {% else %}
+                                    CLOSED
+                                    {% endif %}
+                                    </td>
+                                    <td>{{trade['expiry']}}</td>
+                                    <td>{{trade['position_id']}}</td>
+                                    <td>{{trade['zerodha_trading_symbol']}}</td>
+                                    <td>{{trade['zerodha_name']}}</td>
+                                    <td>
+                                        {% if trade['position_type'] == 1 %}
+                                        LONG
+                                        {% elif trade['position_type'] == 2 %}
+                                        SHORT
+                                        {% else %}
+                                        {{ trade['position_type'] }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if trade['instrument_position_type'] == 1 %}
+                                        FUT BUY
+                                        {% elif trade['instrument_position_type'] == 2 %}
+                                        FUT SELL
+                                        {% elif trade['instrument_position_type'] == 3 %}
+                                        OPT BUY
+                                        {% elif trade['instrument_position_type'] == 4 %}
+                                        OPT SELL
+                                        {% endif %}
+                                    </td>
+                                    <td>{{trade['position_entry_time']}}</td>
+                                    <td>{{trade['position_entry_price']}}</td>
+                                    <td>{{trade['position_exit_time']}}</td>
+                                    <td>{{trade['position_exit_price']}}</td>
+                                    <td>{{ ((trade['profit'] or 0) * (trade['lot_size'] or 0)) | round(2) }}</td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End::app-content -->
+
+    <!-- Footer Start -->
+    {% include 'commons/footer.html' %}
+    <!-- Footer End -->
+
+</div>
+
+
+<div class="scrollToTop">
+    <span class="arrow"><i class="ri-arrow-up-s-fill fs-20"></i></span>
+</div>
+<div id="responsive-overlay"></div>
+<!-- Popper JS -->
+<script src="{{ url_for('static', filename='libs/@popperjs/core/umd/popper.min.js') }}"></script>
+
+<!-- Bootstrap JS -->
+<script src="{{ url_for('static', filename='libs/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<!-- Defaultmenu JS -->
+<script src="{{ url_for('static', filename='js/defaultmenu.min.js') }}"></script>
+
+<!-- Node Waves JS -->
+<script src="{{ url_for('static', filename='libs/node-waves/waves.min.js') }}"></script>
+
+<!-- Sticky JS -->
+<script src="{{ url_for('static', filename='js/sticky.js') }}"></script>
+
+<!-- Simplebar JS -->
+<script src="{{ url_for('static', filename='libs/simplebar/simplebar.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/simplebar.js') }}"></script>
+
+<!-- Color Picker JS -->
+<script src="{{ url_for('static', filename='libs/@simonwep/pickr/pickr.es5.min.js') }}"></script>
+
+<!-- JSVector Maps JS -->
+<script src="{{ url_for('static', filename='libs/jsvectormap/js/jsvectormap.min.js') }}"></script>
+
+<!-- JSVector Maps MapsJS -->
+<script src="{{ url_for('static', filename='libs/jsvectormap/maps/world-merc.js') }}"></script>
+
+<!-- Apex Charts JS -->
+<script src="{{ url_for('static', filename='libs/apexcharts/apexcharts.min.js') }}"></script>
+<script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+<!-- Datatables Cdn -->
+<script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.3.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.6/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<!-- Chartjs Chart JS -->
+<script src="{{ url_for('static', filename='libs/chart.js/chart.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/datatables.js') }}"></script>
+
+</body>
+
+</html>
